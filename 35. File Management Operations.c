@@ -4,37 +4,46 @@
 int main() {
     FILE *file;
     char fileName[] = "example.txt";
+    char buffer[256];
 
-    // Open file for writing (creates a new file or truncates an existing file)
+    // 1. Write to file (creates or overwrites)
     file = fopen(fileName, "w");
-
     if (file == NULL) {
         perror("Error opening file for writing");
         exit(EXIT_FAILURE);
     }
-
-    // Write data to the file
     fprintf(file, "Hello, File Management!\n");
-
-    // Close the file
     fclose(file);
+    printf("Data written to file.\n");
 
-    // Open file for reading
+    // 2. Append to file
+    file = fopen(fileName, "a");
+    if (file == NULL) {
+        perror("Error opening file for appending");
+        exit(EXIT_FAILURE);
+    }
+    fprintf(file, "This line is appended.\n");
+    fclose(file);
+    printf("Data appended to file.\n");
+
+    // 3. Read from file
     file = fopen(fileName, "r");
-
     if (file == NULL) {
         perror("Error opening file for reading");
         exit(EXIT_FAILURE);
     }
-
-    // Read and print data from the file
-    char buffer[256];
+    printf("Reading file contents:\n");
     while (fgets(buffer, sizeof(buffer), file) != NULL) {
         printf("%s", buffer);
     }
-
-    // Close the file
     fclose(file);
+
+    // 4. Delete the file
+    if (remove(fileName) == 0) {
+        printf("File deleted successfully.\n");
+    } else {
+        perror("Error deleting the file");
+    }
 
     return 0;
 }
